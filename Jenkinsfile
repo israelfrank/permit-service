@@ -23,11 +23,11 @@ pipeline {
         }
       }
       stage('build image') {
-        when {
-            anyOf {
-                branch 'master'; branch 'develop'
-            }  
-        }
+        // when {
+        //     anyOf {
+        //         branch 'master'; branch 'develop'
+        //     }  
+        // }
         parallel {
           stage('build dockerfile of system only for master and develop and push them to acr') {
             steps {
@@ -47,7 +47,6 @@ pipeline {
                 discordSend description: '**service**: '+ env.GIT_REPO_NAME + '\n **Build**:' + " " + env.BUILD_NUMBER + '\n **Branch**:' + " " + env.GIT_BRANCH + '\n **Status**:' + " " +  currentBuild.result + '\n \n \n **Commit ID**:'+ " " + env.GIT_SHORT_COMMIT + '\n **commit massage**:' + " " + env.GIT_COMMIT_MSG + '\n **commit email**:' + " " + env.GIT_COMMITTER_EMAIL, footer: '', image: '', link: 'http://jnk-devops-ci-cd.northeurope.cloudapp.azure.com/blue/organizations/jenkins/'+env.JOB_FOR_URL+'/detail/'+env.BRANCH_FOR_URL+'/'+env.BUILD_NUMBER+'/pipeline', result: currentBuild.result, thumbnail: '', title: 'Logs build dockerfile master/develop', webhookURL: 'https://discord.com/api/webhooks/735056754051645451/jYad6fXNkPMnD7mopiCJx2qLNoXZnvNUaYj5tYztcAIWQCoVl6m2tE2kmdhrFwoAASbv'    
               }
             }
-
           }
           stage('login to azure container registry') {
             steps {  
